@@ -24,7 +24,7 @@ KDE Theme Switcher, KDE Plasma masaüstü ortamı için otomatik tema değiştir
 
 1. Script dosyasını indirin:
 ```bash
-wget https://raw.githubusercontent.com/username/kde-theme-switcher/main/themeswitcherforkdeplasmabymustafaakalin.sh
+wget https://raw.githubusercontent.com/mustafaakalin/theme-switcher-kde-plasma/main/themeswitcherforkdeplasmabymustafaakalin.sh
 ```
 
 2. Çalıştırma iznini verin:
@@ -100,3 +100,97 @@ Bu proje MIT lisansı altında lisanslanmıştır. Detaylar için `LICENSE` dosy
 ## ✨ Teşekkürler
 
 Bu projeye katkıda bulunan herkese teşekkürler!
+
+
+
+# KDE Theme Switcher - Script Analizi
+
+## Script Yapısı
+
+### 1. Temel Bileşenler
+- **Renk Tanımları**: Terminal çıktısı için ANSI renk kodları
+- **Yapılandırma Değişkenleri**: Dosya yolları ve zaman damgası
+- **Banner Fonksiyonu**: Görsel arayüz başlığı
+
+### 2. Ana Fonksiyonlar
+
+#### Tema Yönetimi
+- `list_options()`: Sistem üzerindeki temaları tarar
+- `get_user_choices()`: Kullanıcı tema seçimlerini alır
+- `apply_settings()`: Seçilen temaları uygular
+- `switch_theme()`: Zamana göre tema değiştirir
+- `update_theme_settings()`: Tema ayarlarını günceller
+
+#### Konsol Yönetimi
+- `list_console_profiles()`: Konsol profillerini listeler
+- `manage_console_profiles()`: Profil yönetim menüsü
+- `create_console_profile()`: Yeni profil oluşturur
+- `update_console_setting()`: Profil ayarlarını günceller
+
+#### Sistem Yönetimi
+- `backup_settings()`: Sistem ayarlarını yedekler
+- `setup_systemd_service()`: Otomatik başlatma servisi kurar
+- `update_menu()`: Ana yönetim menüsü
+
+### 3. Veri Yapıları
+
+#### Tema Bileşenleri
+- Global Temalar
+- Plasma Stilleri
+- İkon Takımları
+- Mouse Temaları
+- Kvantum Temaları
+- Renk Şemaları
+- Konsol Profilleri
+
+#### Yapılandırma Dosyası İçeriği
+```ini
+day_theme=...
+day_plasma_style=...
+day_icons=...
+day_cursor=...
+day_kvantum=...
+day_color_scheme=...
+day_console_profile=...
+
+night_theme=...
+night_plasma_style=...
+night_icons=...
+night_cursor=...
+night_kvantum=...
+night_color_scheme=...
+night_console_profile=...
+```
+
+### 4. Hata Yönetimi
+- Trap mekanizması ile kesinti yönetimi
+- Dosya ve dizin kontrolleri
+- Kullanıcı giriş doğrulaması
+
+### 5. Otomatizasyon
+- Systemd servisi ile otomatik başlatma
+- Zamanlanmış tema değişimi (6:00-18:00 arası)
+- Yapılandırma yedekleme
+
+### 6. Güvenlik Özellikleri
+- Yedekleme sistemi
+- Yapılandırma dosyası izinleri
+- Kullanıcı bazlı servis yönetimi
+
+## Teknik Detaylar
+
+### Sistem Gereksinimleri
+- KDE Plasma Desktop Environment
+- Systemd
+- Bash 4.0+
+- KDE CLI araçları
+
+### Performans
+- Minimal sistem kaynağı kullanımı
+- Hızlı tema değişimi
+- Verimli dosya işlemleri
+
+### Ölçeklenebilirlik
+- Modüler kod yapısı
+- Genişletilebilir tema desteği
+- Özelleştirilebilir zamanlama
