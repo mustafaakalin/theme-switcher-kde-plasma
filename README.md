@@ -1,54 +1,102 @@
-# auto-theme-switcher-kde-plasma-by-mustafaakalin for day night
-Bu bash betiği, KDE Plasma masaüstü ortamında, gündüz ve gece temalarını otomatik olarak değiştiren bir tema anahtarlama aracıdır. 
+# KDE Theme Switcher 🎨
 
+KDE Theme Switcher, KDE Plasma masaüstü ortamı için otomatik tema değiştirici bir araçtır. Gündüz/gece temalarını otomatik olarak değiştirir ve sistem genelinde tutarlı bir görünüm sağlar.
 
-# KDE Plasma Tema Anahtarlama Betiği
+## 🌟 Özellikler
 
-Bu bash betiği, KDE Plasma masaüstü ortamında, gündüz ve gece temalarını otomatik olarak değiştiren bir tema anahtarlama aracıdır. Betik, kullanıcıya farklı tema seçenekleri sunar, seçimlerini kaydeder, ayarları uygular ve belirli dosyaların yedeğini alır. Ayrıca bir systemd servisi oluşturarak, temaların otomatik olarak güncellenmesini sağlar. İşte betiğin adım adım özeti:
+### Ana Özellikler
+- 🌞 Gündüz/Gece tema desteği
+- 🔄 Otomatik tema değişimi (6:00-18:00 arası gündüz teması, 18:00-6:00 arası gece teması)
+- 🎯 Sistemd servisi ile otomatik başlatma
+- 💾 Yapılandırma yedekleme
+- 📊 Kolay kullanımlı terminal arayüzü
 
-## 1. Değişkenler ve Yedekleme Dizini Tanımlamaları
-Betik, temalar ve konfigürasyon dosyalarını yönetmek için çeşitli dosya ve dizin yollarını tanımlar.
-- **CONFIG_FILE**: Kullanıcının tema seçimlerini kaydedecek dosya yolu.
-- **BACKUP_DIR**: Temel konfigürasyon dosyalarının yedekleneceği dizin.
-- **SYSTEMD_SERVICE**: systemd servisi için kullanılacak dosya adı ve yolu.
-- **TIMESTAMP**: Yedekleme dosya adlarında zaman damgası eklemek için kullanılır.
+### Özelleştirilebilen Temalar
+- 🎨 Global Temalar
+- 🖥️ Plasma Stilleri
+- 📱 İkon Takımları
+- 🖱️ Mouse Temaları
+- 🎯 Kvantum Temaları
+- 🌈 Renk Şemaları
+- 💻 Konsol Profilleri
 
-## 2. Listeleme İşlevi (list_options)
-Betik, kullanıcıya seçim yapabilmesi için mevcut tüm tema seçeneklerini listeler:
-- Global Temalar
-- Plasma Stilleri
-- İkon Takımları
-- Mouse Temaları
-- Kvantum Temaları
-- Renk Şemaları
+## ⚙️ Kurulum
 
-## 3. Kullanıcı Seçimlerini Alma (get_user_choices)
-Kullanıcıya gündüz ve gece için tema seçeneklerini seçmesi istenir. Seçilen temalar **CONFIG_FILE** dosyasına kaydedilir.
+1. Script dosyasını indirin:
+```bash
+wget https://raw.githubusercontent.com/username/kde-theme-switcher/main/themeswitcherforkdeplasmabymustafaakalin.sh
+```
 
-## 4. Yedekleme İşlemi (backup_settings)
-Betik, bazı temel KDE ayar dosyalarının yedeğini alır. Bu dosyalar şunlardır:
-- `~/.config/kdeglobals`
-- `~/.config/kwinrc`
-- `~/.config/plasmarc`
-- `~/.config/ksplashrc`
-- `~/.config/kcminputrc`
-Eğer varsa, `/etc/sddm.conf` dosyası da yedeklenir.
+2. Çalıştırma iznini verin:
+```bash
+chmod +x themeswitcherforkdeplasmabymustafaakalin.sh
+```
 
-## 5. Ayarları Uygulama (apply_settings)
-Seçilen tema seçeneklerine göre gündüz veya gece teması ayarları uygulanır. Temalar, Plasma masaüstü ortamına uygun araçlar kullanılarak ayarlanır:
-- `lookandfeeltool` ile global tema.
-- `plasma-apply-desktoptheme` ile Plasma stili.
-- `kwriteconfig5` ile ikon ve fare teması ayarları.
-- `kvantummanager` ile Kvantum teması.
-- `qdbus-qt5` ile Plasma yeniden başlatılır.
+3. Scripti çalıştırın:
+```bash
+./themeswitcherforkdeplasmabymustafaakalin.sh
+```
 
-## 6. Systemd Servisi Kurulumu (setup_systemd_service)
-Eğer systemd servisi mevcut değilse, kullanıcıyı otomatik olarak gündüz ve gece temalarını değiştirmek için bir systemd servisi kurar. Bu servis, belirli aralıklarla temaların değiştirilmesi için sürekli çalışır.
+## 📝 Kullanım
 
-## 7. Temayı Güncelleme (switch_theme)
-Saat dilimine göre, betik gündüz (06:00 - 18:00) veya gece (18:00 - 06:00) temasını uygular.
+### İlk Kurulum
+İlk çalıştırmada script:
+1. Mevcut temaları tarar
+2. Gündüz/gece tema seçimlerini ister
+3. Mevcut ayarları yedekler
+4. Systemd servisini kurar
+5. Seçilen temayı uygular
 
-## 8. Ana Program
-Betik, önce konfigürasyon dosyasının var olup olmadığını kontrol eder. Eğer yoksa, kullanıcıdan tema seçeneklerini alır, yedekleme yapar ve systemd servisini kurar. Ardından, güncel saati kontrol ederek temayı günceller.
+### Tema Güncelleme
+Ana menüden şu seçeneklere erişebilirsiniz:
+1. Gündüz Temasını Güncelle
+2. Gece Temasını Güncelle
+3. Mevcut Temayı Uygula
+4. Konsol Profillerini Yönet
+5. Çıkış
 
-Bu betik, KDE Plasma masaüstü ortamında zaman dilimine göre temaların otomatik olarak değiştirilmesi için kapsamlı bir çözüm sunar. Kullanıcı, yalnızca başlangıçta seçim yapar ve sonrasında tema değişiklikleri otomatik olarak uygulanır.
+### Konsol Profilleri
+- Yeni profil oluşturma
+- Mevcut profilleri görüntüleme
+- Gündüz/gece için farklı profiller atama
+- Profil renk şemalarını değiştirme
+
+## 🗄️ Yapılandırma Dosyaları
+
+- Ana yapılandırma: `~/.theme_switcher_config`
+- Yedekler: `~/.theme_backups`
+- Systemd servisi: `~/.config/systemd/user/theme-switcher.service`
+- Konsol profilleri: `~/.local/share/konsole/`
+
+## 🔧 Bağımlılıklar
+
+- KDE Plasma Desktop Environment
+- Systemd
+- Kvantum Manager
+- KDE CLI araçları (lookandfeeltool, plasma-apply-desktoptheme)
+
+## 🚨 Hata Bildirimi
+
+Herhangi bir hata veya öneriniz için GitHub Issues bölümünü kullanabilirsiniz.
+
+## 📜 Lisans
+
+Bu proje MIT lisansı altında lisanslanmıştır. Detaylar için `LICENSE` dosyasına bakınız.
+
+## 🤝 Katkıda Bulunma
+
+1. Fork'layın
+2. Feature branch oluşturun (`git checkout -b feature/özellik`)
+3. Değişikliklerinizi commit edin (`git commit -am 'Yeni özellik: Özellik açıklaması'`)
+4. Branch'inizi push edin (`git push origin feature/özellik`)
+5. Pull Request oluşturun
+
+## 📌 Not
+
+- Script çalıştırılmadan önce mevcut tema ayarlarınızı yedeklemeniz önerilir
+- Systemd servisi kurulumu için root yetkisi gerekmez
+- Tema değişim saatlerini script içinden özelleştirebilirsiniz
+
+## ✨ Teşekkürler
+
+Bu projeye katkıda bulunan herkese teşekkürler!
