@@ -1,4 +1,4 @@
-# theme-switcher-kde-plasma-by-mustafaakalin
+# auto-theme-switcher-kde-plasma-by-mustafaakalin for day night
 Bu bash betiği, KDE Plasma masaüstü ortamında, gündüz ve gece temalarını otomatik olarak değiştiren bir tema anahtarlama aracıdır. 
 
 
