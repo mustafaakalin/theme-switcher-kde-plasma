@@ -197,7 +197,7 @@ list_options() {
 
     # Konsole Renk Şemaları
     echo -e "${MAGENTA}► Konsole Renk Şemaları${NC}"
-    konsole_color_schemes=$(find /usr/share/konsole ~/.local/share/konsole -type f -name '*.colorscheme' -exec basename {} .colorscheme \; 2>/dev/null)
+    konsole_color_schemes=$(find /usr/share/konsole ~/.local/share/konsole -type f -name '*.profile' -exec basename {} .colorscheme \; 2>/dev/null)
 
 
     # SDDM Temaları
@@ -351,7 +351,7 @@ apply_settings() {
         sudo sed -i "s/^Current=.*/Current=$night_sddm_theme/" "/etc/sddm.conf.d/kde_settings.conf"
         
         # Konsole renk şeması değiştirme
-        konsoleprofile colors="$night_konsole_color_scheme"
+        kwriteconfig5 --group "Desktop Entry" --file ~/.config/konsolerc --key DefaultProfile "$night_konsole_color_scheme"
     
     fi
 
