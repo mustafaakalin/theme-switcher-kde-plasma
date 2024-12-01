@@ -1,78 +1,100 @@
 #!/bin/bash
 
+# Renkler ve Stiller
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+MAGENTA='\033[0;35m'
+CYAN='\033[0;36m'
+BOLD='\033[1m'
+NC='\033[0m' # Renk sıfırlama
+
+# Yapılandırma Dosyaları
 CONFIG_FILE="$HOME/.theme_switcher_config"
 BACKUP_DIR="$HOME/.theme_backups"
 SYSTEMD_SERVICE="theme-switcher.service"
 SYSTEMD_SERVICE_PATH="$HOME/.config/systemd/user/$SYSTEMD_SERVICE"
 TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
 
+# Banner Fonksiyonu
+print_banner() {
+    echo -e "${BLUE}╔════════════════════════════════════════╗${NC}"
+    echo -e "${BLUE}║${BOLD}       KDE TEMA DEĞİŞTİRİCİ v1.0        ${BLUE}║${NC}"
+    echo -e "${BLUE}╚════════════════════════════════════════╝${NC}"
+    echo
+}
+
 # Temalar ve Seçenekleri Listeleme
 list_options() {
-    echo "Tüm temalar ve ayarlar taranıyor..."
+    echo -e "${CYAN}┌─ Tema Tarayıcı ─┐${NC}"
+    echo -e "${YELLOW}Tüm temalar ve ayarlar taranıyor...${NC}\n"
 
-    # Global Temalar
+    echo -e "${MAGENTA}► Global Temalar${NC}"
     themes=$(find /usr/share/plasma/look-and-feel ~/.local/share/plasma/look-and-feel -mindepth 1 -maxdepth 1 -type d -exec basename {} \; 2>/dev/null)
 
-    # Plasma Stilleri
+    echo -e "${MAGENTA}► Plasma Stilleri${NC}"
     plasma_styles=$(find /usr/share/plasma/desktoptheme ~/.local/share/plasma/desktoptheme -mindepth 1 -maxdepth 1 -type d -exec basename {} \; 2>/dev/null)
 
-    # İkon Takımları
+    echo -e "${MAGENTA}► İkon Takımları${NC}"
     icons=$(find /usr/share/icons ~/.local/share/icons -mindepth 1 -maxdepth 1 -type d -exec basename {} \; 2>/dev/null)
 
-    # Mouse Temaları
+    echo -e "${MAGENTA}► Mouse Temaları${NC}"
     cursors=$(find /usr/share/icons ~/.local/share/icons -mindepth 1 -maxdepth 2 -type d -name cursors -exec dirname {} \; 2>/dev/null | xargs -n 1 basename)
 
-    # Kvantum Temaları
+    echo -e "${MAGENTA}► Kvantum Temaları${NC}"
     kvantum_themes=$(find /usr/share/Kvantum ~/.config/Kvantum -mindepth 1 -maxdepth 1 -type d -exec basename {} \; 2>/dev/null)
 
-    # Renk Şemaları
+    echo -e "${MAGENTA}► Renk Şemaları${NC}"
     color_schemes=$(find /usr/share/color-schemes ~/.local/share/color-schemes -type f -name '*.colors' -exec basename {} .colors \; 2>/dev/null)
 
-    echo "Tüm seçenekler listelendi!"
+    echo -e "\n${GREEN}✓ Tüm seçenekler başarıyla listelendi!${NC}\n"
 }
 
 # Kullanıcı Seçimleri
 get_user_choices() {
-    echo "Gündüz teması ayarlarınızı seçin:"
-    echo "1. Global Tema:"
+    echo -e "${CYAN}┌─ Tema Seçici ─┐${NC}"
+    
+    echo -e "\n${YELLOW}🌞 Gündüz teması ayarlarınızı seçin:${NC}"
+    echo -e "${MAGENTA}1. Global Tema:${NC}"
     select day_theme in $themes; do break; done
 
-    echo "2. Plasma Stili:"
+    echo -e "${MAGENTA}2. Plasma Stili:${NC}"
     select day_plasma_style in $plasma_styles; do break; done
 
-    echo "3. İkon Takımı:"
+    echo -e "${MAGENTA}3. İkon Takımı:${NC}"
     select day_icons in $icons; do break; done
 
-    echo "4. Mouse Teması:"
+    echo -e "${MAGENTA}4. Mouse Teması:${NC}"
     select day_cursor in $cursors; do break; done
 
-    echo "5. Kvantum Teması:"
+    echo -e "${MAGENTA}5. Kvantum Teması:${NC}"
     select day_kvantum in $kvantum_themes; do break; done
 
-    echo "6. Renk Şeması:"
+    echo -e "${MAGENTA}6. Renk Şeması:${NC}"
     select day_color_scheme in $color_schemes; do break; done
 
-    echo "Gece teması ayarlarınızı seçin:"
-    echo "1. Global Tema:"
+    echo -e "\n${YELLOW}🌙 Gece teması ayarlarınızı seçin:${NC}"
+    echo -e "${MAGENTA}1. Global Tema:${NC}"
     select night_theme in $themes; do break; done
 
-    echo "2. Plasma Stili:"
+    echo -e "${MAGENTA}2. Plasma Stili:${NC}"
     select night_plasma_style in $plasma_styles; do break; done
 
-    echo "3. İkon Takımı:"
+    echo -e "${MAGENTA}3. İkon Takımı:${NC}"
     select night_icons in $icons; do break; done
 
-    echo "4. Mouse Teması:"
+    echo -e "${MAGENTA}4. Mouse Teması:${NC}"
     select night_cursor in $cursors; do break; done
 
-    echo "5. Kvantum Teması:"
+    echo -e "${MAGENTA}5. Kvantum Teması:${NC}"
     select night_kvantum in $kvantum_themes; do break; done
 
-    echo "6. Renk Şeması:"
+    echo -e "${MAGENTA}6. Renk Şeması:${NC}"
     select night_color_scheme in $color_schemes; do break; done
 
     # Seçimleri Kaydet
-    echo "Seçimler kaydediliyor..."
+    echo -e "${YELLOW}Seçimler kaydediliyor...${NC}"
     cat <<EOL > $CONFIG_FILE
 day_theme=$day_theme
 day_plasma_style=$day_plasma_style
@@ -88,12 +110,13 @@ night_cursor=$night_cursor
 night_kvantum=$night_kvantum
 night_color_scheme=$night_color_scheme
 EOL
-    echo "Konfigürasyon dosyasına kaydedildi: $CONFIG_FILE"
+    echo -e "\n${GREEN}✓ Seçimler başarıyla kaydedildi: ${BOLD}$CONFIG_FILE${NC}\n"
 }
 
 # Yedekleme İşlemi
 backup_settings() {
-    echo "Yedekleme işlemi başlatılıyor..."
+    echo -e "${CYAN}┌─ Yedekleme ─┐${NC}"
+    echo -e "${YELLOW}Yedekleme işlemi başlatılıyor...${NC}\n"
     mkdir -p "$BACKUP_DIR"
 
     files_to_backup=(
@@ -107,25 +130,29 @@ backup_settings() {
     for file in "${files_to_backup[@]}"; do
         if [[ -f $file ]]; then
             cp "$file" "$BACKUP_DIR/$(basename "$file")_$TIMESTAMP"
+            echo -e "${GREEN}✓ ${file}${NC} yedeklendi"
         else
-            echo "Uyarı: $file bulunamadı, atlanıyor."
+            echo -e "${RED}⚠ ${file}${NC} bulunamadı, atlanıyor."
         fi
     done
 
     if [[ -f /etc/sddm.conf ]]; then
         sudo cp /etc/sddm.conf "$BACKUP_DIR/sddm.conf_$TIMESTAMP"
+        echo -e "${GREEN}✓ /etc/sddm.conf${NC} yedeklendi"
     fi
 
-    echo "Yedekleme tamamlandı."
+    echo -e "\n${GREEN}✓ Yedekleme tamamlandı${NC}\n"
 }
 
 # Ayarları Uygulama
 apply_settings() {
     local theme_type=$1
+    echo -e "${CYAN}┌─ Tema Uygulama ─┐${NC}"
 
     source "$CONFIG_FILE"
 
     if [[ $theme_type == "day" ]]; then
+        echo -e "${YELLOW}🌞 Gündüz teması uygulanıyor...${NC}"
         lookandfeeltool -a "$day_theme"
         plasma-apply-desktoptheme "$day_plasma_style"
         kwriteconfig5 --file ~/.config/kdeglobals --group Icons --key Theme "$day_icons"
@@ -133,6 +160,7 @@ apply_settings() {
         kvantummanager --set "$day_kvantum"
         kwriteconfig5 --file ~/.config/kdeglobals --group General --key ColorScheme "$day_color_scheme"
     else
+        echo -e "${YELLOW}🌙 Gece teması uygulanıyor...${NC}"
         lookandfeeltool -a "$night_theme"
         plasma-apply-desktoptheme "$night_plasma_style"
         kwriteconfig5 --file ~/.config/kdeglobals --group Icons --key Theme "$night_icons"
@@ -141,17 +169,20 @@ apply_settings() {
         kwriteconfig5 --file ~/.config/kdeglobals --group General --key ColorScheme "$night_color_scheme"
     fi
 
-    echo "Ayarlar uygulandı, Plasma yeniden başlatılıyor..."
+    echo -e "${YELLOW}Plasma yeniden başlatılıyor...${NC}"
     qdbus-qt5 org.kde.KWin /KWin reconfigure
     plasmashell --replace &>/dev/null &
+    echo -e "${GREEN}✓ Ayarlar başarıyla uygulandı${NC}\n"
 }
 
 # Systemd Servisi Kurulumu
 setup_systemd_service() {
+    echo -e "${CYAN}┌─ Systemd Servis Kurulumu ─┐${NC}"
+    
     if [[ -f $SYSTEMD_SERVICE_PATH ]]; then
-        echo "Systemd servisi zaten mevcut, tekrar oluşturulmayacak."
+        echo -e "${YELLOW}⚠ Systemd servisi zaten mevcut, tekrar oluşturulmayacak.${NC}"
     else
-        echo "Systemd servisi oluşturuluyor..."
+        echo -e "${YELLOW}Systemd servisi oluşturuluyor...${NC}"
         mkdir -p "$(dirname "$SYSTEMD_SERVICE_PATH")"
         cat <<EOL > $SYSTEMD_SERVICE_PATH
 [Unit]
@@ -168,7 +199,7 @@ WantedBy=default.target
 EOL
         systemctl --user enable "$SYSTEMD_SERVICE"
         systemctl --user start "$SYSTEMD_SERVICE"
-        echo "Systemd servisi oluşturuldu ve etkinleştirildi."
+        echo -e "${GREEN}✓ Systemd servisi oluşturuldu ve etkinleştirildi${NC}\n"
     fi
 }
 
@@ -177,17 +208,21 @@ switch_theme() {
     current_hour=$(date +%H)
 
     if (( 6 <= current_hour && current_hour < 18 )); then
-        echo "Gündüz teması uygulanıyor..."
         apply_settings "day"
     else
-        echo "Gece teması uygulanıyor..."
         apply_settings "night"
     fi
 }
 
+# Hata Yakalama
+trap 'echo -e "\n${RED}⚠ Script kesintiye uğradı!${NC}"; exit 1' INT TERM
+
 # Ana Program
+clear
+print_banner
+
 if [[ ! -f $CONFIG_FILE ]]; then
-    echo "Konfigürasyon dosyası bulunamadı. İlk kurulum başlatılıyor..."
+    echo -e "${YELLOW}⚙ İlk kurulum başlatılıyor...${NC}\n"
     list_options
     get_user_choices
     backup_settings
@@ -195,3 +230,7 @@ if [[ ! -f $CONFIG_FILE ]]; then
 fi
 
 switch_theme
+
+echo -e "${BLUE}╔════════════════════════════════════════╗${NC}"
+echo -e "${BLUE}║${BOLD}           İŞLEM TAMAMLANDI           ${BLUE}║${NC}"
+echo -e "${BLUE}╚════════════════════════════════════════╝${NC}"
