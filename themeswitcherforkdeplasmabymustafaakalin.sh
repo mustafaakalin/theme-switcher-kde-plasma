@@ -25,6 +25,133 @@ print_banner() {
     echo
 }
 
+# Güncelleme Menüsü
+update_menu() {
+    echo -e "${CYAN}┌─ Tema Güncelleme ─┐${NC}"
+    echo -e "${YELLOW}Mevcut ayarlarınızı güncellemek ister misiniz?${NC}\n"
+    echo -e "1) ${MAGENTA}Gündüz Temasını Güncelle 🌞${NC}"
+    echo -e "2) ${MAGENTA}Gece Temasını Güncelle 🌙${NC}"
+    echo -e "3) ${MAGENTA}Mevcut Temayı Uygula${NC}"
+    echo -e "4) ${RED}Çıkış${NC}"
+    
+    read -p $'\nSeçiminiz (1-4): ' choice
+
+    case $choice in
+        1)
+            echo -e "\n${YELLOW}🌞 Gündüz teması ayarlarını güncelleme${NC}"
+            update_theme_settings "day"
+            ;;
+        2)
+            echo -e "\n${YELLOW}🌙 Gece teması ayarlarını güncelleme${NC}"
+            update_theme_settings "night"
+            ;;
+        3)
+            switch_theme
+            ;;
+        4)
+            echo -e "\n${GREEN}Program kapatılıyor...${NC}"
+            exit 0
+            ;;
+        *)
+            echo -e "\n${RED}⚠ Geçersiz seçim!${NC}"
+            update_menu
+            ;;
+    esac
+}
+
+# Tema Ayarlarını Güncelleme
+update_theme_settings() {
+    local theme_type=$1
+    list_options
+
+    # Mevcut ayarları yedekle
+    source "$CONFIG_FILE"
+
+    if [[ $theme_type == "day" ]]; then
+        echo -e "\n${YELLOW}🌞 Yeni gündüz teması ayarlarınızı seçin:${NC}"
+        echo -e "${MAGENTA}1. Global Tema:${NC}"
+        select day_theme in $themes; do break; done
+
+        echo -e "${MAGENTA}2. Plasma Stili:${NC}"
+        select day_plasma_style in $plasma_styles; do break; done
+
+        echo -e "${MAGENTA}3. İkon Takımı:${NC}"
+        select day_icons in $icons; do break; done
+
+        echo -e "${MAGENTA}4. Mouse Teması:${NC}"
+        select day_cursor in $cursors; do break; done
+
+        echo -e "${MAGENTA}5. Kvantum Teması:${NC}"
+        select day_kvantum in $kvantum_themes; do break; done
+
+        echo -e "${MAGENTA}6. Renk Şeması:${NC}"
+        select day_color_scheme in $color_schemes; do break; done
+    else
+        echo -e "\n${YELLOW}🌙 Yeni gece teması ayarlarınızı seçin:${NC}"
+        echo -e "${MAGENTA}1. Global Tema:${NC}"
+        select night_theme in $themes; do break; done
+
+        echo -e "${MAGENTA}2. Plasma Stili:${NC}"
+        select night_plasma_style in $plasma_styles; do break; done
+
+        echo -e "${MAGENTA}3. İkon Takımı:${NC}"
+        select night_icons in $icons; do break; done
+
+        echo -e "${MAGENTA}4. Mouse Teması:${NC}"
+        select night_cursor in $cursors; do break; done
+
+        echo -e "${MAGENTA}5. Kvantum Teması:${NC}"
+        select night_kvantum in $kvantum_themes; do break; done
+
+        echo -e "${MAGENTA}6. Renk Şeması:${NC}"
+        select night_color_scheme in $color_schemes; do break; done
+    fi
+
+    # Yeni ayarları kaydet
+    if [[ $theme_type == "day" ]]; then
+        cat <<EOL > $CONFIG_FILE
+day_theme=$day_theme
+day_plasma_style=$day_plasma_style
+day_icons=$day_icons
+day_cursor=$day_cursor
+day_kvantum=$day_kvantum
+day_color_scheme=$day_color_scheme
+
+night_theme=$night_theme
+night_plasma_style=$night_plasma_style
+night_icons=$night_icons
+night_cursor=$night_cursor
+night_kvantum=$night_kvantum
+night_color_scheme=$night_color_scheme
+EOL
+    else
+        cat <<EOL > $CONFIG_FILE
+day_theme=$day_theme
+day_plasma_style=$day_plasma_style
+day_icons=$day_icons
+day_cursor=$day_cursor
+day_kvantum=$day_kvantum
+day_color_scheme=$day_color_scheme
+
+night_theme=$night_theme
+night_plasma_style=$night_plasma_style
+night_icons=$night_icons
+night_cursor=$night_cursor
+night_kvantum=$night_kvantum
+night_color_scheme=$night_color_scheme
+EOL
+    fi
+
+    echo -e "\n${GREEN}✓ Yeni ayarlar kaydedildi${NC}"
+    
+    # Kullanıcıya tema uygulama seçeneği sun
+    echo -e "\n${YELLOW}Yeni ayarları şimdi uygulamak ister misiniz? (E/H)${NC}"
+    read -p "Seçiminiz: " apply_now
+    if [[ $apply_now =~ ^[Ee]$ ]]; then
+        apply_settings $theme_type
+    fi
+}
+
 # Temalar ve Seçenekleri Listeleme
 list_options() {
     echo -e "${CYAN}┌─ Tema Tarayıcı ─┐${NC}"
@@ -217,6 +344,7 @@ switch_theme() {
 # Hata Yakalama
 trap 'echo -e "\n${RED}⚠ Script kesintiye uğradı!${NC}"; exit 1' INT TERM
 
+
 # Ana Program
 clear
 print_banner
@@ -227,9 +355,10 @@ if [[ ! -f $CONFIG_FILE ]]; then
     get_user_choices
     backup_settings
     setup_systemd_service
+    switch_theme
+else
+    update_menu
 fi
-
-switch_theme
 
 echo -e "${BLUE}╔════════════════════════════════════════╗${NC}"
 echo -e "${BLUE}║${BOLD}           İŞLEM TAMAMLANDI           ${BLUE}║${NC}"
